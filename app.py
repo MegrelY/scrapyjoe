@@ -1,17 +1,46 @@
 # app.py
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from scraper import scrape, visited_urls, scraped_data, save_data_to_json
 from config import config
 from logging_config import setup_logging
 from urllib.parse import urlparse
 from models import PageData, session
+from functools import wraps
+import os
+import json
+
 
 # Initialize logging
 setup_logging()
 
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
+
+# Authentication Functions
+
+def check_auth(username, password):
+    """Check if a username/password combination is valid."""
+    valid_username = os.getenv('BASIC_AUTH_USERNAME', 'admin')
+    valid_password = os.getenv('BASIC_AUTH_PASSWORD', 'your_secure_password')
+    return username == valid_username and password == valid_password
+
+def authenticate():
+    """Send a 401 response to prompt for credentials."""
+    return Response(
+        'Could not verify your access level for that URL.\n'
+        'You need to login with proper credentials.', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    """Decorator to prompt for authentication."""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -49,6 +78,7 @@ def index():
     return render_template('index.html', error=error)
 
 @app.route('/data')
+@requires_auth
 def view_data():
     # Retrieve all scraped pages from the database
     pages = session.query(PageData).all()
