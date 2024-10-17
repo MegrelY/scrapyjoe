@@ -5,6 +5,7 @@ from scraper import scrape, visited_urls, scraped_data, save_data_to_json
 from config import config
 from logging_config import setup_logging
 from urllib.parse import urlparse
+from models import PageData, session
 
 # Initialize logging
 setup_logging()
@@ -46,6 +47,12 @@ def index():
 
         return render_template('results.html', stats=stats)
     return render_template('index.html', error=error)
+
+@app.route('/data')
+def view_data():
+    # Retrieve all scraped pages from the database
+    pages = session.query(PageData).all()
+    return render_template('data.html', pages=pages)
 
 def is_valid_url(url):
     parsed = urlparse(url)
