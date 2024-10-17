@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Scraping Complete</h1>
+    <p>Pages Scraped: {{ stats.pages_scraped }}</p>
+    <p>Max Depth Reached: {{ stats.max_depth_reached }}</p>
+    <a href="/" class="btn btn-secondary">Scrape Another Website</a>
+{% endblock %}

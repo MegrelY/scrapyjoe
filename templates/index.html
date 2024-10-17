@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Scrapy Joe</h1>
+    <p>Enter the website URL to scrape and specify the maximum depth and pages.</p>
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <form method="post">
+        <div class="mb-3">
+            <label for="url" class="form-label">Website URL</label>
+            <input type="url" class="form-control" id="url" name="url" placeholder="https://example.com" required>
+        </div>
+        <div class="mb-3">
+            <label for="max_depth" class="form-label">Max Depth</label>
+            <input type="number" class="form-control" id="max_depth" name="max_depth" value="2" min="1" required>
+        </div>
+        <div class="mb-3">
+            <label for="max_pages" class="form-label">Max Pages</label>
+            <input type="number" class="form-control" id="max_pages" name="max_pages" value="10" min="1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Scrape</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,18 @@
+scrapyjoe/
+├── app.py
+├── config.py
+├── config.yaml     # Your configuration file goes here
+├── logging_config.py
+├── models.py
+├── scraper.py
+├── requirements.txt
+├── Procfile
+├── .env
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   └── results.html
+├── static/         # For static files like CSS and images (if needed)
+│   └── css/
+│       └── styles.css
+├── venv/           # Your virtual environment directory
